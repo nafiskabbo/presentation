@@ -11,7 +11,6 @@
 - Save new presentations with a version suffix: `-v1`, `-v2`, `-v3`, and so on.
 - Use this naming pattern: `output/LLM_Self_Correction_ICLR2024_Group_Presentation-v1.pptx`
 - Never overwrite an earlier version. Increase the version number for every new export.
-- Do not use `output/LLM_Self_Correction_ICLR2024_Group_Presentation_animated.pptx` as a template, source, or visual reference. That file is temporary and may be removed.
 - Use `reference/paper.pdf` as the source for the paper's content, claims, figures, and citations.
 
 ## Deliverable
@@ -29,6 +28,7 @@ Use the `pptx` skill for PowerPoint creation, editing, structure, rendering, val
 - Include purposeful, restrained animations that support the speaking flow. Do not animate every element.
 - Cite the paper and any other sources on the relevant slides. Include a references slide if needed.
 - Do not display raw URLs anywhere in the deck.
+- On the first slide, show the presentation topic and all student names listed in `specs/student-names.txt`.
 - Show the current topic on every slide so the audience can follow the structure.
 - Put the presentation title in the footer on every slide.
 - Add a zero-padded slide counter in `current/total` format, such as `01/20`. The total must match the final slide count.
