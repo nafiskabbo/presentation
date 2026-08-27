@@ -850,7 +850,7 @@ function addSmallArrow(slide, x, y) { addArrow(slide, x, y, 0.32, 0.16, C.muted)
   addFooter(s, 23);
 }
 
-const outPath = "output/LLM_Self_Correction_ICLR2024_Group_Presentation-v9.pptx";
+const outPath = "output/LLM_Self_Correction_ICLR2024_Group_Presentation-v10.pptx";
 pres.writeFile({ fileName: outPath })
-  .then(() => console.log(`Presentation v9 generated successfully at: ${outPath}`))
+  .then(() => console.log(`Presentation v10 generated successfully at: ${outPath}`))
   .catch((err) => console.error("Error generating presentation:", err));

@@ -1,4 +1,4 @@
-# Full Presentation Speech Script (Version 9)
+# Full Presentation Speech Script (Version 10)
 **Paper:** Large Language Models Cannot Self-Correct Reasoning Yet (ICLR 2024)
 **Group Presenters in speaking order:**
 1. Srijon (2303179) - Section 1: Introduction (Slides 01-05, ~3.5 mins)
