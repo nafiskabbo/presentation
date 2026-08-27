@@ -30,7 +30,7 @@ const C = {
 
 const TOTAL = 23;
 const TITLE_FONT = "Century Schoolbook";
-const BODY_FONT = "Calibri";
+const BODY_FONT = "Cambria";
 const FOOTER_TEXT = "Large Language Models Cannot Self-Correct Reasoning Yet | ICLR 2024";
 
 function pad(n) { return String(n).padStart(2, "0"); }
@@ -480,12 +480,12 @@ function addSmallArrow(slide, x, y) { addArrow(slide, x, y, 0.32, 0.16, C.muted)
   ];
   s.addChart(pres.charts.BAR, gptChartData, {
     x: 0.6, y: 1.32, w: 5.2, h: 3.55,
-    showLegend: true, legendPos: "b", legendColor: C.slateDark, legendFontSize: 8,
+    showLegend: true, legendPos: "b", legendColor: C.slateDark, legendFontSize: 8, legendFontFace: BODY_FONT,
     chartColors: [C.slateDark, C.amber, C.crimson],
-    showValue: true, dataLabelPosition: "outEnd", dataLabelColor: C.slateDark, dataLabelFontSize: 8,
+    showValue: true, dataLabelPosition: "outEnd", dataLabelColor: C.slateDark, dataLabelFontSize: 8, dataLabelFontFace: BODY_FONT,
     valAxisMaxVal: 100,
-    catAxisLabelColor: C.slateDark, catAxisLabelFontSize: 8,
-    valAxisLabelColor: C.muted, valAxisLabelFontSize: 8,
+    catAxisLabelColor: C.slateDark, catAxisLabelFontSize: 8, catAxisLabelFontFace: BODY_FONT,
+    valAxisLabelColor: C.muted, valAxisLabelFontSize: 8, valAxisLabelFontFace: BODY_FONT,
     showTitle: false,
     barGrouping: "clustered",
   });
@@ -522,12 +522,12 @@ function addSmallArrow(slide, x, y) { addArrow(slide, x, y, 0.32, 0.16, C.muted)
   ];
   s.addChart(pres.charts.BAR, colChartData, {
     x: 0.6, y: 1.32, w: 5.2, h: 3.55,
-    showLegend: true, legendPos: "b", legendColor: C.slateDark, legendFontSize: 8,
+    showLegend: true, legendPos: "b", legendColor: C.slateDark, legendFontSize: 8, legendFontFace: BODY_FONT,
     chartColors: [C.slateDark, C.amber, C.crimson],
-    showValue: true, dataLabelPosition: "outEnd", dataLabelColor: C.slateDark, dataLabelFontSize: 8,
+    showValue: true, dataLabelPosition: "outEnd", dataLabelColor: C.slateDark, dataLabelFontSize: 8, dataLabelFontFace: BODY_FONT,
     valAxisMaxVal: 100,
-    catAxisLabelColor: C.slateDark, catAxisLabelFontSize: 8,
-    valAxisLabelColor: C.muted, valAxisLabelFontSize: 8,
+    catAxisLabelColor: C.slateDark, catAxisLabelFontSize: 8, catAxisLabelFontFace: BODY_FONT,
+    valAxisLabelColor: C.muted, valAxisLabelFontSize: 8, valAxisLabelFontFace: BODY_FONT,
     showTitle: false,
     barGrouping: "clustered",
   });
@@ -554,9 +554,9 @@ function addSmallArrow(slide, x, y) { addArrow(slide, x, y, 0.32, 0.16, C.muted)
   const doughnutData = [{ name: "Transitions", labels: ["Unchanged 74.7%", "Correct->Wrong 8.9%", "Wrong->Correct 7.6%", "Stayed Wrong 8.8%"], values: [74.7, 8.9, 7.6, 8.8] }];
   s.addChart(pres.charts.DOUGHNUT, doughnutData, {
     x: 0.6, y: 1.32, w: 4.8, h: 3.55,
-    showLegend: true, legendPos: "b", legendColor: C.slateDark, legendFontSize: 8,
+    showLegend: true, legendPos: "b", legendColor: C.slateDark, legendFontSize: 8, legendFontFace: BODY_FONT,
     chartColors: [C.slateDark, C.red, C.green, C.amber],
-    showValue: true, dataLabelColor: C.white, dataLabelFontSize: 8,
+    showValue: true, dataLabelColor: C.white, dataLabelFontSize: 8, dataLabelFontFace: BODY_FONT,
     holeSize: 55,
     showTitle: false,
   });
@@ -592,12 +592,12 @@ function addSmallArrow(slide, x, y) { addArrow(slide, x, y, 0.32, 0.16, C.muted)
   ];
   s.addChart(pres.charts.BAR, debateChartData, {
     x: 0.6, y: 1.32, w: 5.2, h: 3.55,
-    showLegend: true, legendPos: "b", legendColor: C.slateDark, legendFontSize: 8,
+    showLegend: true, legendPos: "b", legendColor: C.slateDark, legendFontSize: 8, legendFontFace: BODY_FONT,
     chartColors: [C.slateDark, C.amber, C.green],
-    showValue: true, dataLabelPosition: "outEnd", dataLabelColor: C.slateDark, dataLabelFontSize: 8,
+    showValue: true, dataLabelPosition: "outEnd", dataLabelColor: C.slateDark, dataLabelFontSize: 8, dataLabelFontFace: BODY_FONT,
     valAxisMaxVal: 100,
-    catAxisLabelColor: C.slateDark, catAxisLabelFontSize: 8,
-    valAxisLabelColor: C.muted, valAxisLabelFontSize: 8,
+    catAxisLabelColor: C.slateDark, catAxisLabelFontSize: 8, catAxisLabelFontFace: BODY_FONT,
+    valAxisLabelColor: C.muted, valAxisLabelFontSize: 8, valAxisLabelFontFace: BODY_FONT,
     showTitle: false,
     barGrouping: "clustered",
   });
