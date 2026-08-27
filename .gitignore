@@ -1,3 +1,4 @@
+node_modules/
 # Bun - bun.lock is committed, no node_modules
 # (run `bun install` to restore deps)
 
