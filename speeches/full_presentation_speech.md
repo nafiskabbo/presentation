@@ -156,7 +156,9 @@ The core takeaway is clear: without external grounding, a frozen model cannot pr
 
 ## Spoken Script
 
-Table 1 of the paper exposes three fundamental experimental confounders:
+As shown in our comparison chart and diagnostic breakdown from Table 1, prior claims relied on three root confounders.
+
+Notice the bars on our chart: reported gains of four to ten percent completely collapse to zero or negative values when properly controlled.
 
 First, Oracle Leakage, affecting RCI and Reflexion. The evaluation harness secretly used test labels to alert the model only when its answer was wrong. By shielding correct answers from revision, apparent scores could only go up. In real applications, no oracle exists.
 
