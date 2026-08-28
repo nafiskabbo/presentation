@@ -10,14 +10,13 @@
 - Keep original presentation and speech files unchanged.
 - Save new presentations with a version suffix: `-v1`, `-v2`, `-v3`, and so on.
 - Use this naming pattern for presentations: `output/LLM_Self_Correction_ICLR2024_Group_Presentation-vN.pptx`
-- Save companion speech scripts with a matching version directory: `speeches-vN/`
-- Inside `speeches-vN/`, provide both individual per-slide scripts (`slide-01.md` through `slide-24.md`) and a master unified presentation script (`full_presentation_speech_vN.md`).
-- Never overwrite an earlier version. Increase the version number for every new export.
+- Save companion speech script in the `speeches/` folder in one unified master presentation script file: `speeches/full_presentation_speech.md`.
+- Never overwrite an earlier version unless explicitly instructed.
 - Use `reference/paper.pdf` as the source for the paper's content, claims, figures, and citations.
 
 ## Deliverable
 
-Create one polished `.pptx` presentation for a six-person university group presentation, along with versioned speech scripts for all members. The deck must explain the paper clearly, support a live presentation, and use concise slide copy.
+Create one polished `.pptx` presentation for a six-person university group presentation, along with companion speech script in `speeches/full_presentation_speech.md`. The deck must explain the paper clearly, support a live presentation, and use concise slide copy.
 
 Use the `pptx` skill for PowerPoint creation, editing, structure, rendering, validation, and visual QA. Use the `frontend-design` skill for the visual direction and the `unslop` skill for all written content and speeches.
 
@@ -39,8 +38,7 @@ Use the `pptx` skill for PowerPoint creation, editing, structure, rendering, val
 
 ## Speech script requirements
 
-- Generate versioned speech markdown scripts in `speeches-vN/`.
-- Provide individual markdown files for each slide (`slide-01.md` through `slide-24.md`) plus a unified full presentation script (`full_presentation_speech_vN.md`).
+- Maintain the unified presentation speech script in `speeches/full_presentation_speech.md`.
 - Target length: 3 to 4 minutes per presenter (~3.5 minutes average, 45 to 60 seconds per slide).
 - Tone: Professional, witty, and engaging for a university audience. Incorporate relatable humor and sharp audience hooks (for example, comparing recursive self-doubt to asking a lost friend for directions, or mentioning expensive slow frontier models) while explaining technical mechanisms clearly.
 - Delivery markers: Include clear cues, slide transitions, key emphasis words, and timing guidance.

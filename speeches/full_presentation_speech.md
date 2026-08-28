@@ -1,17 +1,19 @@
-# Full Presentation Speech Script (Version 10)
+# Full Presentation Speech Script
 **Paper:** Large Language Models Cannot Self-Correct Reasoning Yet (ICLR 2024)
+**Authors:** Jie Huang (UIUC), Xinyun Chen, Swaroop Mishra, Huaixiu Steven Zheng, Adams Wei Yu, Xinying Song, Denny Zhou (Google DeepMind)
+**Conference:** International Conference on Learning Representations (ICLR) 2024
 **Group Presenters in speaking order:**
-1. Srijon (2303179) - Section 1: Introduction (Slides 01-05, ~3.5 mins)
-2. Nafis Islam Kabbo (2303180) - Section 2: Literature Review (Slides 06-08, ~3.0 mins)
-3. Mahid (2303127) - Section 3: Methodology (Slides 09-11, ~3.0 mins)
-4. Jebon (2303160) - Section 4: Results (Slides 12-15, ~3.5 mins)
-5. Anindo (2303181) - Section 5: Analysis (Slides 16-19, ~3.5 mins)
-6. Refayet (2303148) - Section 6: Conclusion and Future Work (Slides 20-23, ~3.5 mins)
+1. Nafis Islam Kabbo (2303180) - Section 1: Introduction and Research Problem (Slides 01-05, ~3.5 mins)
+2. Srijon (2303179) - Section 2: Literature Review and Background (Slides 06-08, ~3.0 mins)
+3. Anindo (2303181) - Section 3: Methodology and Experimental Setup (Slides 09-11, ~3.0 mins)
+4. Mahid (2303127) - Section 4: Main Results (Slides 12-15, ~3.5 mins)
+5. Jebon (2303160) - Section 5: Why Does Self-Correction Fail? (Slides 16-19, ~3.5 mins)
+6. Refayet (2303148) - Section 6: Conclusion, Limitations, and Future Directions (Slides 20-23, ~3.5 mins)
 
 ---
 
 # Slide 01: Title Slide
-**Speaker:** Srijon (2303179)
+**Speaker:** Nafis Islam Kabbo (2303180)
 **Topic:** 1. Introduction and Research Problem
 **Target Duration:** ~45 seconds
 
@@ -19,409 +21,368 @@
 
 Good morning everyone. Respected professor and fellow classmates.
 
-We are presenting *Large Language Models Cannot Self-Correct Reasoning Yet*, ICLR 2024, by Jie Huang at UIUC and Denny Zhou and colleagues at Google DeepMind.
+We are presenting *Large Language Models Cannot Self-Correct Reasoning Yet*, published at ICLR 2024 by Jie Huang at UIUC along with Denny Zhou and colleagues at Google DeepMind.
 
-If you have used ChatGPT for math homework, you know the pattern. The answer looks confident, step by step, and then the final number is wrong. You ask the model to check itself, and it apologizes and gives you a different wrong number. Today we explain why that happens, and why prior claims that models can fix themselves were mostly measurement mistakes.
+If you have ever used ChatGPT for math or multi-step logic, you know the familiar scenario. The model outputs a confident, step-by-step chain of thought, but arrives at the wrong final answer. When you prompt it to check its work, it politely apologizes and produces a completely different wrong answer. Today, our team will explore why this happens and why previous claims that language models can self-correct reasoning were largely experimental artifacts.
 
-I will open with the core reasoning problem and the paradox that drives the paper. Kabbo will then map the prior literature and the four evaluation traps. Mahid will cover the benchmarks and experimental controls. Jebon will show the numbers. Anindo will explain why verification is so hard. Refayet will close with limits and what actually works.
+I will introduce the reasoning vulnerability and our central research question. Srijon will cover prior frameworks and literature flaws. Anindo will detail the experimental methodology. Mahid will present the empirical benchmark results. Jebon will analyze why verification fails, and Refayet will conclude with limitations and constructive future directions.
 
-Let us start.
+Let us begin.
 
 ---
 
 # Slide 02: Presentation Outline
-**Speaker:** Srijon (2303179)
+**Speaker:** Nafis Islam Kabbo (2303180)
 **Topic:** Overview
 **Target Duration:** ~40 seconds
 
 ## Spoken Script
 
-Here is the plan. Just the six sections, no clutter.
+Here is the roadmap for our presentation across six focused sections:
 
-Section 1, Introduction. Why multi-step reasoning is fragile and why self-correction is tempting.
+Section 1, Introduction. Why sequential multi-step reasoning is fragile and what self-correction promised.
 
-Section 2, Background. Four frameworks from 2023 and the evaluation flaws.
+Section 2, Background and Literature. Prior frameworks including RCI, Reflexion, Self-Refine, and Debate, alongside their evaluation confounders.
 
-Section 3, Methodology. Benchmarks, models, and the clean intrinsic versus oracle protocol.
+Section 3, Methodology. Evaluation benchmarks across GSM8K, CommonSenseQA, and HotpotQA across four frontier language models.
 
-Section 4, Results. Accuracy goes down after self-correction.
+Section 4, Results. Empirical proof showing that intrinsic self-correction consistently decreases accuracy.
 
-Section 5, Analysis. Equal compute, the prompt trap, a concrete example, and the verification barrier.
+Section 5, Analysis. Why compute parity, prompt design artifacts, compliance bias, and shared parameters prevent successful verification.
 
-Section 6, Conclusion. Limits and what actually works.
-
-Each block builds on the last.
+Section 6, Conclusion and Future Work. Where tool-augmented refinement works and fair standards for future research.
 
 ---
 
 # Slide 03: Large Language Models and Reasoning
-**Speaker:** Srijon (2303179)
+**Speaker:** Nafis Islam Kabbo (2303180)
 **Topic:** 1. Introduction and Research Problem
 **Target Duration:** ~50 seconds
 
 ## Spoken Script
 
-Look at the flowchart. This is why reasoning breaks.
+Let us look at the flowchart on this slide to understand why multi-step reasoning breaks down.
 
-Language models are autoregressive. They write left to right, one token at a time. For math we use Chain of Thought, so the model writes out intermediate steps.
+Large language models generate text autoregressively, predicting one token at a time from left to right. When solving reasoning tasks using Chain of Thought, the model generates intermediate deductions sequentially.
 
-The diagram shows it clearly. Box one, the question. Box two, the CoT steps. Step one stays correct. Step two slips. Step three inherits that slip. Box three, the final answer is corrupted.
+As illustrated in our diagram, the input question enters the system. In step one of the reasoning chain, the deduction is sound. However, in step two, a slight arithmetic or logical slip occurs. Because every subsequent token is conditioned on previous tokens, step three inherits the corrupted premise. By the time the model outputs its final answer, the result is completely wrong.
 
-This is the domino effect. The model conditions every new token on the tokens it already wrote, even if one of them is wrong. There is no built in pause button that says wait, step two looks off, let me backtrack. Without an outside check, the chain just keeps building on the error. That is the vulnerability self-correction was supposed to solve.
-
-*[Gesture to the takeaway bar at the bottom, pause on "domino effect"]*
+This is the domino effect of sequential reasoning. The model has no internal mechanism to pause, backtrack, or recognize that step two was flawed. Self-correction was proposed as the solution to this exact problem.
 
 ---
 
 # Slide 04: The Concept of Self-Correction
-**Speaker:** Srijon (2303179)
+**Speaker:** Nafis Islam Kabbo (2303180)
 **Topic:** 1. Introduction and Research Problem
 **Target Duration:** ~45 seconds
 
 ## Spoken Script
 
-So researchers proposed a loop. It is simple on paper.
+Researchers proposed an intuitive three-step loop to address reasoning failures.
 
-Step one, draft answer. The model writes a CoT and an answer.
+Step one, Draft Answer. The model generates an initial Chain of Thought and tentative answer.
 
-Step two, self-critique. We prompt it, review your reasoning and find flaws.
+Step two, Self-Critique. The model receives a prompt such as "Review your reasoning and find any flaws."
 
-Step three, revised answer. The model writes a new CoT and new answer. Then repeat, at most twice in this paper.
+Step three, Revised Answer. The model updates its reasoning and outputs a refined answer. This loop is repeated for up to two rounds.
 
-The promise was huge. If this worked, we could have agents that debug code or solve contest math alone.
-
-The flowchart at the bottom shows the intended cycle, draft to critique to fix, retry. The key point is that the loop uses the same frozen model. No calculator. No Python. No human label. Just the model talking to itself. That is what we mean by intrinsic. Keep this in mind, because the next slide asks the awkward question.
+The promise was autonomous reasoning refinement without human intervention. However, the critical caveat is that this entire process is intrinsic. It relies on the exact same model with frozen parameters talking to itself, without calculators, external verifiers, or ground truth labels. That brings us to the central paradox of the paper.
 
 ---
 
 # Slide 05: The Central Research Question
-**Speaker:** Srijon (2303179)
+**Speaker:** Nafis Islam Kabbo (2303180)
 **Topic:** 1. Introduction and Research Problem
 **Target Duration:** ~50 seconds
 
 ## Spoken Script
 
-Here it is. The central paradox, in one line.
+Here is the central question that drives this entire study:
 
-If a model can correct a mistake, why did it not get it right the first time.
+"If a model can correct a mistake, why did it not get it right the first time?"
 
-Read it again. The weights are frozen. When you ask the model to critique itself, you are not giving it new knowledge. You are feeding its own output back into the same network that just made the error.
+Consider the mechanics. The weights of the model are frozen. When the model critiques its own answer, no new information or external signal has been added. You are feeding the model's own flawed generation back into the very network that generated it.
 
-The slide keeps it minimal for a reason. The next slide will do the detailed taxonomy of intrinsic versus external feedback. Here we just set the test. The paper tests intrinsic only. External help, like running code, is useful but it is a different claim and out of scope for this result.
+The authors isolate intrinsic self-correction specifically. While external tool assistance like code execution is valuable, the paper asks whether a model alone possesses the self-awareness to fix its own reasoning. If intrinsic correction worked, it would represent free accuracy gains. The paper proves it does not.
 
-If intrinsic correction were real, it would be free performance. The paper shows it is not. Over to Kabbo for the literature.
-
-*[Hand over to Kabbo, clear transition]*
+I will now hand over to Srijon to examine the prior literature.
 
 ---
 
 # Slide 06: Prior Self-Correction Frameworks
-**Speaker:** Nafis Islam Kabbo (2303180)
+**Speaker:** Srijon (2303179)
 **Topic:** 2. Literature Review and Background
 **Target Duration:** ~50 seconds
 
 ## Spoken Script
 
-Thanks Srijon. I am Kabbo, covering background.
+Thank you, Kabbo. I am Srijon, and I will examine the four prominent frameworks in literature.
 
-In 2023 four frameworks claimed self-correction works.
+As shown in our four visual architecture cards:
 
-RCI, Recursive Criticism and Improvement, by Kim et al. at NeurIPS 2023. The model critiques then revises, recursively.
+First, RCI, or Recursive Critique and Improvement, from NeurIPS 2023. It prompts the model to recursively detect and patch code errors zero-shot.
 
-Reflexion, by Shinn et al. It keeps verbal reflections in memory across tries.
+Second, Reflexion, also from NeurIPS 2023. It converts binary test execution failures into verbal memory stored across multiple trial attempts.
 
-Self-Refine, by Madaan et al. A feedback loop that writes its own feedback and then refines.
+Third, Self-Refine, from NeurIPS 2023. It runs an iterative feedback loop using multi-aspect task rubrics across style and logic.
 
-Multi-Agent Debate, by Du et al. Multiple copies of the model debate each other to reach consensus.
+Fourth, Multi-Agent Debate. It deploys multiple model instances that debate divergent solutions to reach consensus.
 
-All reported gains, sometimes seven to fifteen percent. The question is, were those gains real or were they artifacts of how the experiments were set up.
+All four papers claimed substantial gains of seven to fifteen percent. However, as our bottom callout highlights, these reported improvements stemmed from hidden evaluation confounders.
 
 ---
 
-# Slide 07: Intrinsic versus External Feedback
-**Speaker:** Nafis Islam Kabbo (2303180)
+# Slide 07: Intrinsic vs. External Feedback
+**Speaker:** Srijon (2303179)
 **Topic:** 2. Literature Review and Background
 **Target Duration:** ~60 seconds
 
 ## Spoken Script
 
-This is the distinction prior work blurred.
+This slide contrasts the two fundamentally different regimes that prior literature often conflated.
 
-Left side, intrinsic. This is what the paper isolates. The model generates, checks itself with a generic prompt, and revises. Same weights. No labels. No tool output. The flowchart shows the loop, generate, diamond decision, self check, revise. Result, consistently fails. Accuracy drops.
+On the left, we trace Intrinsic Self-Correction. The model generates a draft, receives an unguided prompt to find flaws, and attempts a blind revision. Because the weights are frozen and no external ground truth exists, the model has no reliable verification signal. It second-guesses sound steps, causing accuracy to drop across rounds by up to 27.5 percent.
 
-Right side, external. Here a verifier gives new information. A Python interpreter says your code raised an error on line four. An oracle says your answer is wrong. Or unit tests fail. The model then revises with that signal. That often works, because the signal is new truth the model did not have.
+On the right, we trace External and Tool-Assisted Feedback. Here, the model generates executable code or formulas evaluated by a deterministic engine like a Python interpreter or oracle. The environment returns exact error traces. The model then conditions its update on this objective ground truth, achieving genuine gains of seven to fifteen percent.
 
-Conflating these two made self-correction look stronger than it was. When you give a model the answer key and then say look, it corrected itself, that is not the model correcting itself.
-
-*[Point left then right, pause on "new information"]*
+The core takeaway is clear: without external grounding, a frozen model cannot produce a new verification signal.
 
 ---
 
 # Slide 08: Flaws in Prior Evaluations
-**Speaker:** Nafis Islam Kabbo (2303180)
+**Speaker:** Srijon (2303179)
 **Topic:** 2. Literature Review and Background
 **Target Duration:** ~55 seconds
 
 ## Spoken Script
 
-Table 1 distills four confounders. Notice we removed the reference column to keep it readable, the details are in the paper.
+Table 1 of the paper exposes three fundamental experimental confounders:
 
-One, oracle leakage in RCI and Reflexion. The system only triggered correction when the test harness said the answer was wrong. In real use you do not have that label. If you only touch wrong answers and protect right ones, your score can only go up.
+First, Oracle Leakage, affecting RCI and Reflexion. The evaluation harness secretly used test labels to alert the model only when its answer was wrong. By shielding correct answers from revision, apparent scores could only go up. In real applications, no oracle exists.
 
-Two, oracle leakage again in Reflexion for the same reason, reflections fired only on failure signals.
+Second, Unfair Compute Parity, affecting Multi-Agent Debate. Debate consumed three to six times more compute than single-shot baselines. When compared against Self-Consistency at equal sample budgets, the debate advantage completely vanished.
 
-Three, unfair compute in Multi-Agent Debate. Debate used three agents times three rounds. Compare that to a single shot baseline and of course it looks better. Give that same budget to simple majority voting and the debate edge disappears.
+Third, Prompt Design Distortion, affecting Self-Refine. Initial prompts omitted critical rules, which were only supplied during the feedback prompt. The model was merely following delayed instructions rather than self-correcting logic.
 
-Four, weak initial prompt in Self-Refine. The first prompt omitted required constraints, then the feedback prompt added them back and claimed improvement.
-
-Fix these, and the reported gains vanish. Now Mahid will detail how the authors tested cleanly.
+When these confounders are eliminated, intrinsic reasoning gains drop to zero. Anindo will now explain the methodology.
 
 ---
 
 # Slide 09: Evaluation Benchmarks
-**Speaker:** Mahid (2303127)
+**Speaker:** Anindo (2303181)
 **Topic:** 3. Methodology and Experimental Setup
 **Target Duration:** ~50 seconds
 
 ## Spoken Script
 
-Thanks Kabbo. I am Mahid, methodology.
+Thank you, Srijon. I am Anindo, and I will present the methodology.
 
-Three benchmarks, chosen to cover different reasoning.
+The authors evaluated intrinsic self-correction across three rigorous reasoning benchmarks:
 
-GSM8K, 1,319 grade school math problems. Two to eight steps. Tests whether the model can track arithmetic state without drifting.
+First, GSM8K, containing 1,319 grade school math word problems requiring two to eight arithmetic steps. This tests numerical tracking and multi-step state maintenance.
 
-CommonSenseQA, 1,221 multiple choice. Tests subtle commonsense with distractors that punish keyword matching.
+Second, CommonSenseQA, with 1,221 multiple-choice questions requiring commonsense knowledge with strong distractors.
 
-HotpotQA, 100 samples here due to API cost, closed book, multi-hop. Tests synthesis across facts without retrieval.
+Third, HotpotQA, evaluated on a 100-sample multi-hop subset in a closed-book setting to test factual synthesis without retrieval.
 
-Note the prior claims on each card. Kim et al. reported plus seven percent on GSM8K with oracle help. Plus fifteen percent on CommonSenseQA. This paper asks, what happens without that help.
+Notice the prior claims highlighted on each card. Prior studies claimed up to seven percent gains on GSM8K and fifteen percent on CommonSenseQA using oracle assistance. This study evaluates what happens when those artificial crutches are removed.
 
 ---
 
 # Slide 10: Models and Experimental Controls
-**Speaker:** Mahid (2303127)
+**Speaker:** Anindo (2303181)
 **Topic:** 3. Methodology and Experimental Setup
 **Target Duration:** ~45 seconds
 
 ## Spoken Script
 
-Four models, all standard snapshots to keep it reproducible.
+The evaluation spanned four prominent language models under standardized conditions:
 
-GPT-3.5 Turbo, gpt-3.5-turbo-0613.
+1. GPT-3.5-Turbo, snapshot 0613.
+2. GPT-4, the August 2023 production snapshot.
+3. GPT-4-Turbo, snapshot 1106-preview.
+4. Llama-2-70B-Chat, the leading open-weight baseline.
 
-GPT-4, August 2023 production snapshot.
-
-GPT-4 Turbo, gpt-4-1106-preview.
-
-Llama-2 70B Chat, the leading open weight baseline.
-
-Controls are deliberately plain, bullet points only as required.
-
-Chain of Thought, zero and few shot.
-
-Temperature 1.0 for GPT models, 0.7 for Llama-2.
-
-At most two correction rounds per problem.
-
-Generic prompts like review your previous answer and find why it could be wrong, no hints.
-
-And a direct comparison, intrinsic versus oracle guided, so the same prompts are tested both ways.
+The experimental controls were maintained with strict scientific rigor:
+- Chain of Thought prompting in few-shot and zero-shot settings.
+- Temperature set to 1.0 for GPT models and 0.7 for Llama-2.
+- A maximum of two self-correction rounds per problem.
+- Generic feedback prompts without leading hints.
+- Direct side-by-side comparisons between intrinsic and oracle-guided regimes.
 
 ---
 
 # Slide 11: Prompting Procedures
-**Speaker:** Mahid (2303127)
+**Speaker:** Anindo (2303181)
 **Topic:** 3. Methodology and Experimental Setup
-**Target Duration:** ~60 seconds
+**Target Duration:** ~55 seconds
 
 ## Spoken Script
 
-Top row is the flow. Actual flowchart arrows, not just text.
+This slide illustrates the exact prompting procedure.
 
-Initial, generate draft. Critique, ask to review. Revise, write new reasoning. Iterate for round two.
+Across the top, the generation cycle progresses from initial draft generation to critique, revision, and second-round iteration.
 
-Bottom left, with oracle, flawed. Verifier checks after step one. If correct, stop. If wrong, trigger fix. That shields correct answers, so scores inflate.
+The critical comparison is shown at the bottom:
+Under the Oracle regime on the bottom left, an external verifier checks the initial answer. If correct, the process stops. If wrong, revision is triggered. This artificial setup prevents correct answers from being modified, creating inflated accuracy numbers.
 
-Bottom right, intrinsic, realistic. No verifier. The model must judge every problem blindly. It second guesses correct answers and flips them. That is why scores drop.
+Under the realistic Intrinsic regime on the bottom right, no oracle exists. The model must blindly evaluate every problem. Because it cannot verify its own logic, it doubts correct deductions and changes them to wrong ones.
 
-The down arrows make it concrete. Same top flow, different bottom regime, opposite outcome. Over to Jebon for what the numbers show.
+Mahid will now walk us through the empirical results.
 
 ---
 
 # Slide 12: Intrinsic Self-Correction Fails
-**Speaker:** Jebon (2303160)
+**Speaker:** Mahid (2303127)
 **Topic:** 4. Main Results: Intrinsic Self-Correction Fails
 **Target Duration:** ~45 seconds
 
 ## Spoken Script
 
-Thanks Mahid. I am Jebon, results.
+Thank you, Anindo. I am Mahid, and I will present the main empirical results.
 
-Headline, in one sentence. Intrinsic self-correction does not help reasoning. It hurts.
+Here is the central finding of the entire paper:
+Intrinsic self-correction does not improve reasoning accuracy. Across all evaluated models and benchmarks, accuracy consistently declines after self-correction.
 
-The banner says it plainly. Scores decline after correction.
-
-Three angles.
-
-Universal, every model drops. GPT-3.5, GPT-4, Turbo, Llama-2, from initial to round one to round two.
-
-Task agnostic, math, commonsense, multi-hop QA, all three fail.
-
-Oracle illusion, the only way to make the number go up is to tell the model when it is wrong. That is not the model fixing itself, that is the test harness fixing it.
-
-Let us see how much it drops.
+This failure exhibits three defining properties:
+First, it is Universal. Every tested model, including GPT-3.5, GPT-4, GPT-4-Turbo, and Llama-2, experiences performance drops across rounds.
+Second, it is Task-Agnostic. Whether testing arithmetic on GSM8K, logic on CommonSenseQA, or multi-hop QA on HotpotQA, self-correction consistently harms performance.
+Third, it exposes the Oracle Illusion. The only way prior methods appeared to work was by relying on external ground truth signals.
 
 ---
 
 # Slide 13: GPT-3.5 and GPT-4 Benchmark Results
-**Speaker:** Jebon (2303160)
+**Speaker:** Mahid (2303127)
 **Topic:** 4. Main Results: Intrinsic Self-Correction Fails
 **Target Duration:** ~55 seconds
 
 ## Spoken Script
 
-Table 3, GPT-3.5 and GPT-4.
+Let us examine the exact numbers in Table 2 for GPT-3.5 and GPT-4.
 
-Bar chart, dark is standard CoT, amber is round one, crimson is round two.
+In the bar chart, dark slate represents standard Chain of Thought, amber represents Round 1 self-correction, and crimson represents Round 2.
 
-Every group goes down.
+In every benchmark category, the bars decline with each round:
+On CommonSenseQA with GPT-3.5, accuracy drops from 72.5 percent down to 55.3 percent in Round 2, representing a massive 17.2 percentage point collapse.
+On HotpotQA with GPT-4, accuracy falls from 53.0 percent down to 42.0 percent, an 11 percentage point drop.
+Even on GSM8K with GPT-4, where initial accuracy is a strong 92.0 percent, self-correction degrades performance to 88.0 percent.
 
-On CommonSenseQA with GPT-3.5, 72.5 percent to 63.5 to 55.3. That is a 17.2 point collapse across two rounds.
-
-On HotpotQA with GPT-4, 53.0 to 42.0, an 11 point drop.
-
-Even on GSM8K with GPT-4 where it starts at 92.0, it falls to 88.0.
-
-The model is not repairing chains. It is corrupting them. And the right panel summarizes the worst drops so you can quote them directly.
+Rather than fixing reasoning errors, intrinsic critique systematically degrades valid reasoning chains.
 
 ---
 
-# Slide 14: GPT-4 Turbo and Llama-2 Results
-**Speaker:** Jebon (2303160)
+# Slide 14: GPT-4-Turbo and Llama-2 Results
+**Speaker:** Mahid (2303127)
 **Topic:** 4. Main Results: Intrinsic Self-Correction Fails
 **Target Duration:** ~50 seconds
 
 ## Spoken Script
 
-Does a newer or open model behave differently. No.
+Does this degradation persist in newer frontier and open-weight models? Yes.
 
-GPT-4 Turbo dips a little, 91.5 to 90.0 on GSM8K, 84.0 to 83.0 on CommonSenseQA. Small but still down.
+For GPT-4-Turbo, accuracy drops on GSM8K from 91.5 percent to 90.0 percent, and on CommonSenseQA from 84.0 percent to 83.0 percent.
 
-Llama-2 is the stark case. GSM8K 62.0 to 36.5, down 25.5 points. CommonSenseQA 64.0 to 36.5, down 27.5 points. Almost half the accuracy gone.
+The collapse is especially severe for Llama-2-70B-Chat. On GSM8K, accuracy plunges from 62.0 percent to 36.5 percent, a 25.5 point decrease. On CommonSenseQA, it drops from 64.0 percent to 36.5 percent, losing nearly half its performance.
 
-Why so severe. Llama-2 is highly compliant. When you say find flaws, it assumes it must have flaws. It obeys the instruction more than it trusts its own correct math, and it abandons the right answer.
-
-The exclamation mark in the circle is not decoration, it is the warning. Compliance without grounding is dangerous.
+Why does Llama-2 suffer such a massive collapse? Open-weight chat models exhibit extreme instruction compliance. When prompted to "find flaws", the model assumes an error must exist, abandons its sound reasoning, and fabricates a new, incorrect answer.
 
 ---
 
 # Slide 15: Answer Transition Dynamics
-**Speaker:** Jebon (2303160)
+**Speaker:** Mahid (2303127)
 **Topic:** 4. Main Results: Intrinsic Self-Correction Fails
 **Target Duration:** ~50 seconds
 
 ## Spoken Script
 
-Figure 1 explains the arithmetic of the drop. GPT-3.5 on GSM8K.
+Figure 1 from the paper explains the underlying transition dynamics behind this accuracy decline on GSM8K with GPT-3.5.
 
-Doughnut, four slices.
+Looking at the doughnut chart:
+74.7 percent of answers remained unchanged.
+8.8 percent stayed incorrect.
+7.6 percent of answers were successfully repaired from wrong to correct.
+However, 8.9 percent of answers were flipped from correct to wrong.
 
-74.7 percent unchanged.
+Comparing the beneficial fixes of 7.6 percent against the harmful flips of 8.9 percent reveals a net negative shift of minus 1.3 percent. Because unguided self-critique damages more correct answers than it fixes, each round compounds overall error.
 
-8.8 percent stayed wrong.
-
-7.6 percent were fixed, wrong to correct. That is the intended benefit.
-
-8.9 percent were flipped, correct to wrong. That is the harm.
-
-Compare the last two. 8.9 harm versus 7.6 help. Net loss 1.3 points. Every unguided loop destroys more correct answers than it repairs. Run it twice and the loss compounds.
-
-So the decline is not random noise. It is a systematic negative drift. Over to Anindo for why.
+Jebon will now analyze the root causes of this failure.
 
 ---
 
-# Slide 16: Multi-Agent Debate versus Self-Consistency
-**Speaker:** Anindo (2303181)
+# Slide 16: Multi-Agent Debate vs. Self-Consistency
+**Speaker:** Jebon (2303160)
 **Topic:** 5. Why Does Self-Correction Fail?
 **Target Duration:** ~55 seconds
 
 ## Spoken Script
 
-Thanks Jebon. I am Anindo, analysis.
+Thank you, Mahid. I am Jebon, and I will analyze the structural causes of self-correction failure.
 
-Multi-Agent Debate claimed emergent gains. Table 7 tests it at equal cost.
+First, let us examine Multi-Agent Debate under equal compute budgets, shown in Table 4.
 
-Chart, three bars per task. Dark single shot, amber debate, green self-consistency, which is just majority vote over independent samples.
+Proponents of debate claimed emergent reasoning through multi-agent critique. In our chart, single-shot is shown in slate, debate in crimson, and Self-Consistency in green. Self-Consistency simply samples multiple reasoning paths and takes a majority vote.
 
-On GSM8K, single shot 77.0, debate 81.0, looks like a win. But self-consistency with the same number of samples is 82.5.
+On GSM8K, single-shot achieves 77.0 percent while debate achieves 81.0 percent. However, Self-Consistency with the exact same number of samples achieves 82.5 percent.
 
-Same on CommonSenseQA and Chess QA. Green matches or beats amber, with no agents talking to each other and no sequential waiting.
-
-Debate was expensive sampling with extra latency. If you want better accuracy for the same budget, just sample and vote. The debate framing added cost, not reasoning.
-
-*[Point to right panel cost boxes, debate N times M versus N]*
+The same pattern holds across CommonSenseQA and Chess QA. When compute is matched, independent sampling and majority voting consistently beats multi-agent debate with lower latency and zero agent-to-agent coordination overhead.
 
 ---
 
 # Slide 17: The Prompt Design Trap
-**Speaker:** Anindo (2303181)
+**Speaker:** Jebon (2303160)
 **Topic:** 5. Why Does Self-Correction Fail?
 **Target Duration:** ~55 seconds
 
 ## Spoken Script
 
-Second cause, the prompt trap. This one is subtle.
+The second major cause is the Prompt Design Trap, illustrated in Table 5.
 
-Left, flawed setup like Self-Refine on constrained generation. Step one, weak prompt that omits a required rule, for example use all target words. Step two, feedback adds the missing rule, you forgot word X, add it. Step three, it improves and the paper claims self-correction works.
+On the left, we see how flawed setups like Self-Refine operated. The initial prompt omitted critical constraints, such as required keywords. In the feedback step, the prompt explicitly reminded the model of the missing rule. The model updated its answer, and the authors claimed a breakthrough in self-correction.
 
-Right, fair setup by Huang et al. Step one includes all rules up front. The model answers well immediately. Step two, intrinsic correction then makes it worse.
+On the right, Huang et al. tested a fair setup by including all task constraints in the initial prompt. The model produced a high-quality answer immediately, and subsequent self-correction only degraded performance.
 
-The takeaway at the bottom is blunt. Well prompted single shot beats loops. The earlier gains came from leaking information in the second prompt, not from the model reflecting.
-
-If your baseline is artificially weak, any second try looks like progress.
+The takeaway is clear: the apparent gains in prior studies were prompt engineering artifacts, not genuine reasoning self-correction.
 
 ---
 
-# Slide 18: Case Study, The Gaslighting Effect
-**Speaker:** Anindo (2303181)
+# Slide 18: Case Study: The Gaslighting Effect
+**Speaker:** Jebon (2303160)
 **Topic:** 5. Why Does Self-Correction Fail?
-**Target Duration:** ~55 seconds
+**Target Duration:** ~60 seconds
 
 ## Spoken Script
 
-Concrete example, Figure 4, the yogurt problem. And yes, we generated the yogurt pack visual on the slide.
+To understand this breakdown concretely, let us trace Figure 2: the famous Yogurt Problem from GSM8K.
 
-Top, the problem. Terry eats 2 yogurts a day, a 4-pack costs 5 dollars, how much for 30 days.
+The problem states: "Terry eats 2 yogurts a day. They are sold in 4-packs at $5.00 per pack. How much does he spend on yogurts in 30 days?"
 
-Left, Round 1. Big green $75. 30 times 2 is 60, 60 divided by 4 is 15 packs, 15 times 5 is 75. Clean, correct.
+In Phase 1 on the left, the model solves the problem flawlessly in Round 1:
+30 days times 2 yogurts equals 60 yogurts. 60 divided by 4 equals 15 packs. 15 packs times $5.00 equals $75.00. The answer is completely correct.
 
-Center, the gaslighting step. The generated pack shows 4 cups for 5 dollars. The prompt says find flaws. The model sees a correct answer but the instruction tells it to find a flaw, so it invents one.
+In Phase 2 in the center, the model is prompted: "Review your previous answer and find any flaws." Because of instruction compliance bias, the model presumes the user is alerting it to an error and invents a flaw.
 
-Right, Round 2. Big red $150. It doubts the valid math, reframes 4 yogurts as 2 days, and flips to 150.
+In Phase 3 on the right, the model hallucinates an imaginary mistake in Round 2, falsely concluding that Terry buys one pack per day, calculating 30 times $5 to arrive at $150.00.
 
-We call this gaslighting because the prompt pressures the model to see an error where there is none. That single flip is the 8.9 percent harmful rate you saw in Figure 1.
+The critique prompt effectively gaslights the model into abandoning valid logic. Refayet will now present our conclusion.
 
 ---
 
 # Slide 19: The Verification Barrier
-**Speaker:** Anindo (2303181)
+**Speaker:** Jebon (2303160)
 **Topic:** 5. Why Does Self-Correction Fail?
 **Target Duration:** ~50 seconds
 
 ## Spoken Script
 
-The theory behind the failure has three parts.
+The core theoretical obstacle is the Verification Barrier, which consists of three pillars:
 
-One, shared weights. Critic and generator are the same network. If 70 billion parameters could not get the arithmetic right the first time, the same 70 billion parameters cannot reliably check it the second time. Knowledge parity.
+First, Shared Parameters and Knowledge Parity. The critic and the generator share the exact same weights. If a 70-billion-parameter model lacked the reasoning capacity to solve the problem initially, the same parameters cannot reliably verify the output.
 
-Two, compliance bias. Instruction tuning rewards following the user. When the user says find flaws, the model tries hard to find something, even on a correct solution.
+Second, Compliance Bias. Instruction-tuned models are trained to follow user suggestions. When prompted to find errors, they actively search for flaws, often inventing mistakes in sound steps.
 
-Three, no grounding. Without a tool like Python or an oracle label, the model cannot tell a real fix from a new hallucination. Both feel equally plausible in text space.
+Third, Lack of Grounding. Without an external execution environment like Python, the model cannot distinguish between a genuine correction and a plausible-sounding hallucination.
 
-Put together, verification is as hard as generation, and the prompt biases the model toward seeing errors.
-
-Over to Refayet to close.
+Refayet will now present our conclusions and future directions.
 
 ---
 
@@ -432,17 +393,15 @@ Over to Refayet to close.
 
 ## Spoken Script
 
-Thanks Anindo. I am Refayet, closing.
+Thank you, Jebon. I am Refayet, and I will conclude our presentation.
 
-Three takeaways.
+Here are the three core takeaways from Huang et al.:
 
-One, intrinsic self-correction fails for reasoning. Without external feedback, accuracy drops consistently across models and tasks.
+First, Intrinsic Self-Correction Fails for Multi-Step Reasoning. When isolated from external feedback, self-correction consistently decreases reasoning accuracy across benchmarks and architectures.
 
-Two, prior gains were artifacts. Oracle leakage, unfair compute, weak prompts created an illusion. Fix the evaluation, the gains disappear.
+Second, Prior Literature Gains Were Evaluation Artifacts. Reported improvements stemmed from oracle feedback leakage, compute budget disparities, and incomplete initial prompts.
 
-Three, external feedback is required for reliable refinement. Tools, code execution, verifiers, or human review provide the new information that pure self-talk cannot.
-
-These are narrow claims about reasoning, not about all text generation, and the paper is clear about that.
+Third, External Feedback is Indispensable. Reliable refinement requires external sources of truth, such as code execution environments, learned verifiers, or human feedback.
 
 ---
 
@@ -453,13 +412,18 @@ These are narrow claims about reasoning, not about all text generation, and the 
 
 ## Spoken Script
 
-Limits, stated plainly.
+To maintain scientific objectivity, we must highlight the study's scope limitations:
 
-Left, scope. Reasoning only. Math and logic benchmarks. Not style, translation, or open ended writing where self-critique can help. Frozen prompting, not models fine tuned to self-correct. And 2023 snapshots, so newer reasoners like o1 or o3 need their own tests.
+Regarding Scope:
+- The findings apply specifically to multi-step reasoning, not creative writing, translation, or style editing where self-critique can be beneficial.
+- The experiments tested frozen prompting, not models explicitly fine-tuned with reinforcement learning for self-correction.
+- The models evaluated reflect the 2023 landscape; newer reasoning models require continuous evaluation.
 
-Right, methods. HotpotQA uses 100 samples because of API cost, so resolution is limited there. Prompt space was sampled, not exhaustive. And everything is closed book, no retrieval.
+Regarding Methodology:
+- HotpotQA evaluation was limited to 100 samples due to API costs.
+- The evaluation focused on closed-book settings without retrieval augmentation.
 
-Acknowledging this keeps the claim honest. It is about intrinsic prompting on reasoning tasks with the models tested.
+Acknowledging these boundaries keeps our conclusions clear and well-defined.
 
 ---
 
@@ -470,41 +434,35 @@ Acknowledging this keeps the claim honest. It is about intrinsic prompting on re
 
 ## Spoken Script
 
-Four directions the paper points to.
+The paper outlines four constructive paths forward for the research community:
 
-One, tool augmented verification. Route steps to Python, symbolic solvers, SQL, let the tool be the critic.
+First, Tool-Augmented Verification. Integrating deterministic tools like Python interpreters, SQL engines, and theorem provers to serve as objective ground-truth verifiers.
 
-Two, learned verifiers and Process Reward Models. Train separate discriminators that score step correctness, as Cobbe and others did for GSM8K.
+Second, Learned Verifiers and Process Reward Models. Training dedicated discriminator models to score individual reasoning steps, as demonstrated in modern math verification.
 
-Three, training time methods. Reinforcement learning and search, like MCTS and test time compute, rather than prompt loops on frozen models.
+Third, Training-Time Search and Reinforcement Learning. Developing tree search, Monte Carlo Tree Search, and test-time compute scaling rather than post-hoc prompting loops.
 
-Four, fair standards. Always compare at equal inference cost against self-consistency, and forbid oracle leakage in benchmarks.
-
-The point is not that correction is impossible. It is that correction needs a source of truth outside the same frozen pass.
+Fourth, Establishing Fair Evaluation Standards. Requiring equal-compute baselines against Self-Consistency and strictly prohibiting oracle feedback leakage in benchmark reporting.
 
 ---
 
 # Slide 23: Thank You and Open Discussions
 **Speaker:** Refayet (2303148)
-**Topic:** 6. Conclusion & Future Work
+**Topic:** 6. Conclusion, Limitations, and Future Directions
 **Target Duration:** ~40 seconds
 
 ## Spoken Script
 
-That concludes our presentation. Thank you.
+That concludes our presentation.
 
-On behalf of Srijon, Kabbo, Mahid, Jebon, Anindo and myself, thank you for your attention.
+On behalf of Kabbo, Srijon, Anindo, Mahid, Jebon, and myself, thank you for your attention.
 
-We open for discussion.
+We now open the floor for questions and discussion, and we invite your thoughts on three key questions:
 
-Three questions if helpful.
+1. Why does asking a model to find flaws often make it hallucinate errors where none exist?
+2. When should we rely on external tools like Python or verifiers instead of prompting alone?
+3. How can we design a fair self-correction benchmark that avoids oracle leakage?
 
-One, why does asking a model to find flaws often make it hallucinate errors where none exist?
-
-Two, when should we rely on external tools like Python or verifiers instead of prompting alone?
-
-Three, how can we design a fair self-correction benchmark that avoids oracle leakage?
-
-We welcome your questions and challenges. Thank you.
+Thank you. We welcome your questions.
 
 ---
