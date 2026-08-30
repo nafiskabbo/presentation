@@ -124,7 +124,7 @@ First, RCI, or Recursive Critique and Improvement, from NeurIPS 2023. It prompts
 
 Second, Reflexion, also from NeurIPS 2023. It converts binary test execution failures into verbal memory stored across multiple trial attempts.
 
-Third, Self-Refine, from NeurIPS 2023. It runs an iterative feedback loop using multi-aspect task rubrics across style and logic.
+Third, Self-Refine, from NeurIPS 2023. It runs an iterative feedback loop using structured feedback checklists across style and logic.
 
 Fourth, Multi-Agent Debate. It deploys multiple model instances that debate divergent solutions to reach consensus.
 

@@ -32,13 +32,13 @@ In Q1, Kim and colleagues introduced RCI, claiming a 7% boost on math and reason
 
 In Q2, Shinn and colleagues introduced Reflexion, claiming an 11% improvement by storing verbal self-reflections across multiple attempts. 
 
-In Q3, Madaan and colleagues published Self-Refine, reporting 10% gains through iterative feedback rubrics. 
+In Q3, Madaan and colleagues published Self-Refine, reporting 10% gains using structured feedback checklists. 
 
 And in Q4, Du and colleagues claimed Multi-Agent Debate gave another 4% boost by having multiple instances argue with each other.
 
 On the surface, these numbers looked great. But look at the callout at the bottom of the slide: what the timeline hides. 
 
-When you look under the hood, none of these gains came from genuine internal reflection. RCI and Reflexion relied on oracle leakage, meaning the test harness secretly told the model when it got an answer wrong. Self-Refine relied on a prompt trick, where rules were withheld in the first turn and only revealed later. And Multi-Agent Debate simply burned three to six times more tokens.
+When you look under the hood, none of these gains came from genuine internal reflection. RCI and Reflexion relied on oracle leakage, meaning the test harness secretly told the model when it got an answer wrong. Self-Refine relied on a prompt trick, where rules were omitted in the first turn and only revealed later. And Multi-Agent Debate simply burned three to six times more tokens.
 
 Let us look at slide 8 to see why internal reflection fails where external tools succeed.
 
@@ -111,7 +111,7 @@ First, Oracle Leakage. Papers like RCI and Reflexion reported gains of around 10
 
 Second, Compute Gap. Multi-Agent Debate claimed a 4% gain. But having three LLM agents debate each other is basically spending 6x the API budget to watch models talk in circles. When the authors matched compute by giving single-agent Self-Consistency the same number of sample calls, simple majority voting beat debate by 1.5%.
 
-Third, the Prompt Trick. Self-Refine reported a 10% gain. But the initial prompt withheld formatting rules, which were only introduced during the feedback step. When you give the model the complete prompt from the start, the gain drops to exactly zero.
+Third, the Prompt Trick. Self-Refine reported a 10% gain. But the initial prompt omitted formatting rules, which were only introduced during the feedback step. When you give the model the complete prompt from the start, the gain drops to exactly zero.
 
 The bottom line is undeniable: no confounder survives a fair evaluation.
 

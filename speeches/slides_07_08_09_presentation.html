@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Speech & Presentation Guide: Slides 07, 08, 09 | ICLR 2024</title>
+  <style>
+    :root {
+      --bg: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --text: #0F172A;
+      --text-muted: #475569;
+      --border: #E2E8F0;
+      --crimson: #800020;
+      --crimson-light: #FFF1F2;
+      --crimson-border: #FECDD3;
+      --green: #166534;
+      --green-light: #F0FDF4;
+      --green-border: #BBF7D0;
+      --amber: #B45309;
+      --amber-light: #FFFBEB;
+      --amber-border: #FDE68A;
+      --slate-dark: #0F172A;
+      --slate-light: #334155;
+      --font-title: "Century Schoolbook", Georgia, serif;
+      --font-body: "Calibri", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --base-font-size: 20px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: var(--base-font-size);
+      line-height: 1.6;
+      padding-bottom: 80px;
+    }
+
+    /* Top Sticky Navigation Bar */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid var(--border);
+      padding: 14px 24px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-title {
+      font-family: var(--font-title);
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--crimson);
+      letter-spacing: 0.5px;
+    }
+
+    .brand-sub {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .nav-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-tab {
+      background: var(--card-bg);
+      border: 1.5px solid var(--border);
+      color: var(--slate-dark);
+      padding: 8px 18px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-tab:hover {
+      background: var(--crimson-light);
+      border-color: var(--crimson);
+      color: var(--crimson);
+    }
+
+    .btn-tab.active {
+      background: var(--crimson);
+      border-color: var(--crimson);
+      color: #FFFFFF;
+      box-shadow: 0 2px 8px rgba(128, 0, 32, 0.25);
+    }
+
+    .font-controls {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: 8px;
+      background: #EDF2F7;
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .btn-icon {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 4px 10px;
+      cursor: pointer;
+      font-weight: bold;
+      color: var(--slate-dark);
+    }
+
+    .btn-icon:hover {
+      background: var(--crimson-light);
+      color: var(--crimson);
+    }
+
+    /* Main Container */
+    main {
+      max-width: 1100px;
+      margin: 32px auto;
+      padding: 0 24px;
+    }
+
+    .slide-section {
+      display: none;
+      animation: fadeIn 0.2s ease-in-out;
+    }
+
+    .slide-section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Slide Header Card */
+    .slide-hero {
+      background: #FFFFFF;
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      padding: 24px 30px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+    }
+
+    .slide-badge {
+      display: inline-block;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      color: var(--crimson);
+      background: var(--crimson-light);
+      padding: 4px 12px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      border: 1px solid var(--crimson-border);
+    }
+
+    .slide-title {
+      font-family: var(--font-title);
+      font-size: 2.1rem;
+      color: var(--slate-dark);
+      margin-bottom: 6px;
+      line-height: 1.2;
+    }
+
+    .slide-subtitle {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    /* 3-Second Presenter Glance Checklist */
+    .glance-box {
+      background: #FFFFFF;
+      border: 2px solid #CBD5E1;
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 28px;
+    }
+
+    .glance-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .glance-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--slate-dark);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .glance-tag {
+      background: #E2E8F0;
+      font-size: 0.75rem;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: 700;
+      color: var(--slate-dark);
+    }
+
+    .glance-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 14px;
+    }
+
+    .glance-card {
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+    }
+
+    .glance-card.crimson { border-color: var(--crimson); background: var(--crimson-light); }
+    .glance-card.green { border-color: var(--green); background: var(--green-light); }
+    .glance-card.amber { border-color: var(--amber); background: var(--amber-light); }
+    .glance-card.slate { border-color: var(--slate-dark); background: #F1F5F9; }
+
+    .glance-card-title {
+      font-size: 1.0rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: var(--slate-dark);
+    }
+
+    .glance-card-desc {
+      font-size: 0.9rem;
+      color: var(--slate-light);
+    }
+
+    /* Script Presentation Box */
+    .script-box {
+      background: #FFFFFF;
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      padding: 30px 36px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+      margin-bottom: 30px;
+    }
+
+    .script-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 22px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--crimson-light);
+    }
+
+    .script-title {
+      font-family: var(--font-title);
+      font-size: 1.35rem;
+      color: var(--crimson);
+      font-weight: bold;
+    }
+
+    .script-cue {
+      display: inline-block;
+      background: #FEF3C7;
+      color: #92400E;
+      border: 1px solid #FDE68A;
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 6px;
+    }
+
+    .script-paragraph {
+      font-size: 1.18rem;
+      line-height: 1.75;
+      color: #1E293B;
+      margin-bottom: 20px;
+    }
+
+    .script-paragraph:last-child {
+      margin-bottom: 0;
+    }
+
+    .script-paragraph strong {
+      color: var(--slate-dark);
+      font-weight: 700;
+    }
+
+    .emphasis-joke {
+      background: #FDF2F8;
+      border-left: 4px solid #DB2777;
+      padding: 14px 20px;
+      border-radius: 0 8px 8px 0;
+      margin: 18px 0;
+      font-style: italic;
+      color: #831843;
+      font-size: 1.15rem;
+    }
+
+    .takeaway-banner {
+      background: var(--crimson-light);
+      border: 1.5px solid var(--crimson);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-top: 24px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--crimson-dark);
+    }
+
+    /* Floating Navigation Controls at Bottom */
+    .bottom-nav {
+      position: fixed;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #0F172A;
+      color: #FFFFFF;
+      padding: 8px 18px;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      z-index: 99;
+    }
+
+    .btn-nav {
+      background: transparent;
+      border: none;
+      color: #FFFFFF;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 6px 12px;
+      border-radius: 20px;
+      transition: background 0.15s;
+    }
+
+    .btn-nav:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .slide-indicator {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #94A3B8;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Sticky Navigation -->
+  <header>
+    <div class="brand">
+      <span class="brand-title">ICLR 2024 Presentation Speech</span>
+      <span class="brand-sub">Section 2: Background & Related Work</span>
+    </div>
+    <div class="nav-controls">
+      <button class="btn-tab active" onclick="switchSlide(1)">Slide 07: Timeline of Claims</button>
+      <button class="btn-tab" onclick="switchSlide(2)">Slide 08: Closed vs Grounded Loop</button>
+      <button class="btn-tab" onclick="switchSlide(3)">Slide 09: Forensic Audit</button>
+      <div class="font-controls">
+        <span>Font:</span>
+        <button class="btn-icon" onclick="adjustFontSize(-1)">A-</button>
+        <button class="btn-icon" onclick="adjustFontSize(1)">A+</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main id="mainContainer">
+
+    <!-- ========================================================================= -->
+    <!-- SLIDE 07 -->
+    <!-- ========================================================================= -->
+    <section id="slide-1" class="slide-section active">
+      <div class="slide-hero">
+        <span class="slide-badge">Topic 2. Background & Related Work</span>
+        <h1 class="slide-title">Timeline of Claims</h1>
+        <p class="slide-subtitle">2023 surge, same hidden helpers (Slide 07/24)</p>
+      </div>
+
+      <!-- Presenter Quick Glance Checklist -->
+      <div class="glance-box">
+        <div class="glance-header">
+          <span class="glance-title">3-Second Presenter Glance Guide</span>
+          <span class="glance-tag">LOOK AT SCREEN</span>
+        </div>
+        <div class="glance-grid">
+          <div class="glance-card crimson">
+            <div class="glance-card-title">1. RCI (Q1 2023)</div>
+            <div class="glance-card-desc">Kim et al. • Recursive critic • Claimed +7%</div>
+          </div>
+          <div class="glance-card green">
+            <div class="glance-card-title">2. Reflexion (Q2 2023)</div>
+            <div class="glance-card-desc">Shinn et al. • Verbal memory • Claimed +11%</div>
+          </div>
+          <div class="glance-card amber">
+            <div class="glance-card-title">3. Self-Refine (Q3 2023)</div>
+            <div class="glance-card-desc">Madaan et al. • Feedback refine • Claimed +10%</div>
+          </div>
+          <div class="glance-card slate">
+            <div class="glance-card-title">4. Debate (Q4 2023)</div>
+            <div class="glance-card-desc">Du et al. • Multi-agent debate • Claimed +4%</div>
+          </div>
+        </div>
+        <div style="margin-top: 14px; padding: 10px 14px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 6px; font-size: 0.9rem; color: #475569;">
+          <strong>Bottom Banner (What the timeline hides):</strong> 
+          1. Oracle leakage (covers RCI & Reflexion) | 2. Prompt trick (rules omitted then re-added) | 3. Compute gap (3x to 6x tokens)
+        </div>
+      </div>
+
+      <!-- Full Word-for-Word Script -->
+      <div class="script-box">
+        <div class="script-header">
+          <span class="script-title">Spoken Script</span>
+          <span class="script-cue">[Slide Cue: Switch to Slide 07]</span>
+        </div>
+
+        <p class="script-paragraph">
+          Thank you, Srijon. I will now examine the prior literature and why earlier claims looked so convincing on paper.
+        </p>
+
+        <div class="emphasis-joke">
+          "If you followed AI research throughout 2023, it felt like every quarter brought a shiny new framework claiming language models could fix their own mistakes. It was the same excitement we see today whenever rumors drop about unreleased models like Fable 5.1 or secret codenames. Everyone wanted to believe that self-correction was a solved problem."
+        </div>
+
+        <p class="script-paragraph">
+          Look at the four timeline cards across 2023 on our slide.
+        </p>
+
+        <p class="script-paragraph">
+          In Q1, Kim and colleagues published <strong>RCI</strong>, claiming a 7% boost on math and reasoning by prompting the model to recursively critique its own code.
+        </p>
+
+        <p class="script-paragraph">
+          In Q2, Shinn and colleagues introduced <strong>Reflexion</strong>, claiming an 11% improvement by storing verbal reflections across multiple trials.
+        </p>
+
+        <p class="script-paragraph">
+          In Q3, Madaan and colleagues introduced <strong>Self-Refine</strong>, reporting a 10% gain using structured feedback checklists.
+        </p>
+
+        <p class="script-paragraph">
+          And in Q4, Du and colleagues claimed <strong>Multi-Agent Debate</strong> gave another 4% boost by having multiple instances debate divergent answers.
+        </p>
+
+        <p class="script-paragraph">
+          On the surface, these numbers looked great. But look at the callout at the bottom of the slide: <strong>what the timeline hides</strong>.
+        </p>
+
+        <p class="script-paragraph">
+          When you inspect the experimental setups, none of these gains came from intrinsic self-correction. Both RCI and Reflexion relied on <strong>oracle leakage</strong>, meaning the test harness secretly told the model when it got an answer wrong. Self-Refine relied on a <strong>prompt trick</strong>, where rules were omitted in the initial prompt and only provided during feedback. And Multi-Agent Debate simply burned three to six times more compute.
+        </p>
+
+        <div class="takeaway-banner">
+          Transition: "Let us look at slide 8 to see why internal reflection fails where external tools succeed."
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- SLIDE 08 -->
+    <!-- ========================================================================= -->
+    <section id="slide-2" class="slide-section">
+      <div class="slide-hero">
+        <span class="slide-badge">Topic 2. Background & Related Work</span>
+        <h1 class="slide-title">Closed Loop vs Grounded Loop</h1>
+        <p class="slide-subtitle">Same model, different information: why internal reflection fails but external verification works (Slide 08/24)</p>
+      </div>
+
+      <!-- Presenter Quick Glance Checklist -->
+      <div class="glance-box">
+        <div class="glance-header">
+          <span class="glance-title">3-Second Presenter Glance Guide</span>
+          <span class="glance-tag">LOOK AT SCREEN</span>
+        </div>
+        <div class="glance-grid">
+          <div class="glance-card crimson">
+            <div class="glance-card-title">Left Box: INTRINSIC (Closed Loop)</div>
+            <div class="glance-card-desc">
+              1. Generate → LLM (Frozen) → 2. Self-Critique → 3. Revise Blind<br>
+              <strong>Accuracy Change: -1.3% to -27.5%</strong><br>
+              Zero new facts. Shared weights and prompt bias invent errors.
+            </div>
+          </div>
+          <div class="glance-card green">
+            <div class="glance-card-title">Right Box: EXTERNAL (Grounded Loop)</div>
+            <div class="glance-card-desc">
+              LLM Drafts Code → Executes in Python Tool → Traceback Feedback<br>
+              <strong>Accuracy Change: +7.0% to +15.0%</strong><br>
+              Deterministic reality. Concrete execution errors guide genuine fixes.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Full Word-for-Word Script -->
+      <div class="script-box">
+        <div class="script-header">
+          <span class="script-title">Spoken Script</span>
+          <span class="script-cue">[Slide Cue: Switch to Slide 08]</span>
+        </div>
+
+        <p class="script-paragraph">
+          This slide illustrates the core distinction that prior literature often conflated: a <strong>closed loop</strong> versus a <strong>grounded loop</strong>.
+        </p>
+
+        <p class="script-paragraph">
+          Look at the red box on the left. This is the <strong>closed loop</strong>, which is the exact focus of our paper. The model generates an initial answer, receives an unguided prompt to find flaws, and attempts a blind revision.
+        </p>
+
+        <p class="script-paragraph">
+          Notice the fundamental flaw: zero new information enters the system. The weights of the model are frozen. You are asking the exact same network that made the error to spot its own error.
+        </p>
+
+        <div class="emphasis-joke">
+          "Anyone who has experimented with language models knows what happens next. If you ask an LLM, 'Are you sure about that?', it immediately panics, apologizes for a mistake it never made, and turns a correct answer into a completely broken one."
+        </div>
+
+        <p class="script-paragraph">
+          Because of this compliance bias and lack of external truth, intrinsic self-correction consistently decreases accuracy by <strong>1.3% to 27.5%</strong>.
+        </p>
+
+        <p class="script-paragraph">
+          Now look at the green box on the right. This is the <strong>grounded loop</strong>, and this is where self-correction genuinely works.
+        </p>
+
+        <p class="script-paragraph">
+          Here, the model writes executable code or equations and runs them in a deterministic environment like a Python interpreter. When the execution fails with an exact traceback, the model conditions its update on objective ground truth. That produces real gains between <strong>7% and 15%</strong>.
+        </p>
+
+        <div class="takeaway-banner">
+          Core Principle: "A frozen model cannot act as an independent verifier of its own output without external grounding."
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- SLIDE 09 -->
+    <!-- ========================================================================= -->
+    <section id="slide-3" class="slide-section">
+      <div class="slide-hero">
+        <span class="slide-badge">Topic 2. Background & Related Work</span>
+        <h1 class="slide-title">Forensic: Reported vs Controlled</h1>
+        <p class="slide-subtitle">Paired bars make inflation obvious (Slide 09/24)</p>
+      </div>
+
+      <!-- Presenter Quick Glance Checklist -->
+      <div class="glance-box">
+        <div class="glance-header">
+          <span class="glance-title">3-Second Presenter Glance Guide</span>
+          <span class="glance-tag">LOOK AT SCREEN</span>
+        </div>
+        <div class="glance-grid">
+          <div class="glance-card crimson">
+            <div class="glance-card-title">1. Oracle Leakage</div>
+            <div class="glance-card-desc"><strong>+10.5% → -2.5%</strong><br>Shield correct answers, only fix wrong ones.</div>
+          </div>
+          <div class="glance-card amber">
+            <div class="glance-card-title">2. Compute Gap</div>
+            <div class="glance-card-desc"><strong>+4.0% → -1.5%</strong><br>Debate loses to Self-Consistency at equal token budget.</div>
+          </div>
+          <div class="glance-card slate">
+            <div class="glance-card-title">3. Prompt Trick</div>
+            <div class="glance-card-desc"><strong>+10.0% → 0.0%</strong><br>Weak start vs rule-rich feedback (rules omitted initially).</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Full Word-for-Word Script -->
+      <div class="script-box">
+        <div class="script-header">
+          <span class="script-title">Spoken Script</span>
+          <span class="script-cue">[Slide Cue: Switch to Slide 09]</span>
+        </div>
+
+        <p class="script-paragraph">
+          On this slide, we present the forensic breakdown of prior claims.
+        </p>
+
+        <p class="script-paragraph">
+          Look at the paired bar chart on the left. The red bars represent the claimed accuracy improvements from earlier literature. The green bars represent what happens when you run a controlled, scientifically rigorous test.
+        </p>
+
+        <p class="script-paragraph">
+          Notice the striking pattern: every single red bar collapses straight down into green, ending up at or below zero.
+        </p>
+
+        <p class="script-paragraph">
+          Let us walk through the three cards on the right.
+        </p>
+
+        <p class="script-paragraph">
+          First, <strong>Oracle Leakage</strong>. Papers like RCI and Reflexion reported gains of around 10.5%. But their evaluation harness secretly used ground truth labels to shield correct answers. The model was only prompted to self-correct when its answer was already wrong.
+        </p>
+
+        <div class="emphasis-joke">
+          "That is like taking a multiple choice exam where the teacher only taps your desk when you pick the wrong answer and lets you guess again. In real applications, you do not have an oracle. When you prompt the model on all questions, accuracy drops by 2.5%."
+        </div>
+
+        <p class="script-paragraph">
+          Second, the <strong>Compute Gap</strong>. Multi-Agent Debate claimed a 4% gain. But running three agents through rounds of debate consumes 6x the token budget. When the authors matched compute by giving single-agent Self-Consistency the exact same number of sample calls, standard majority voting beat debate by 1.5%.
+        </p>
+
+        <p class="script-paragraph">
+          Third, the <strong>Prompt Trick</strong>. Self-Refine reported a 10% gain. However, the initial prompt omitted critical formatting rules, which were only introduced in the feedback prompt. When you provide the complete prompt from the start, the self-correction gain drops to exactly 0.0%.
+        </p>
+
+        <div class="takeaway-banner">
+          Read the chart: red collapses to green at or below zero. No confounder survives a fair test.
+        </div>
+
+        <p class="script-paragraph" style="margin-top: 20px;">
+          I will now hand over to Anindo, who will present the methodology and benchmark setup.
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Bottom Floating Navigation Bar -->
+  <div class="bottom-nav">
+    <button class="btn-nav" onclick="prevSlide()">← Prev</button>
+    <span class="slide-indicator" id="slideIndicator">Slide 07 of 09</span>
+    <button class="btn-nav" onclick="nextSlide()">Next →</button>
+  </div>
+
+  <script>
+    let currentSlide = 1;
+    const totalSlides = 3;
+    const titles = ["Slide 07 of 09", "Slide 08 of 09", "Slide 09 of 09"];
+
+    function switchSlide(index) {
+      currentSlide = index;
+      for (let i = 1; i <= totalSlides; i++) {
+        const el = document.getElementById(`slide-${i}`);
+        const btn = document.querySelectorAll('.btn-tab')[i-1];
+        if (i === index) {
+          el.classList.add('active');
+          btn.classList.add('active');
+        } else {
+          el.classList.remove('active');
+          btn.classList.remove('active');
+        }
+      }
+      document.getElementById('slideIndicator').innerText = titles[index - 1];
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides) {
+        switchSlide(currentSlide + 1);
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 1) {
+        switchSlide(currentSlide - 1);
+      }
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        prevSlide();
+      } else if (e.key === '1') switchSlide(1);
+      else if (e.key === '2') switchSlide(2);
+      else if (e.key === '3') switchSlide(3);
+    });
+
+    // Font size scaling
+    let currentFontSize = 20;
+    function adjustFontSize(delta) {
+      currentFontSize = Math.min(28, Math.max(16, currentFontSize + delta));
+      document.documentElement.style.setProperty('--base-font-size', currentFontSize + 'px');
+    }
+  </script>
+</body>
+</html>
